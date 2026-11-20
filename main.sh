@@ -32,6 +32,7 @@ SLEEP_TIME=0.5
 read -r height width < <(stty size)
 # main loop
 while : ; do 
+printf '\e[2J\e[3J\e[H'
 
 ui_draw_box 1 1 "$width" "$height"
 
