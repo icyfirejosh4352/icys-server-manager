@@ -29,11 +29,11 @@ stty -echo
 # printf '\x1b[48;5;16m'
 
 SLEEP_TIME=0.5
-
+read -r height width < <(stty size)
 # main loop
 while : ; do 
 
-ui_draw_box 0 0 4 4
+ui_draw_box 1 1 "$width" "$height"
 
 
 sleep $SLEEP_TIME 

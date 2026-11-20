@@ -7,37 +7,50 @@ ui_draw_box()
     local WIDTH=$3
     local HEIGHT=$4
 
-    # top left corner
-    printf "\033[%d;%dHX" "$ROW" "$COL" # ┌
+#   top left corner
+    printf "\033[%d;%dH┌" "$ROW" "$COL"
 
-    # top edge print loop
+#   top edge draw loop
     local count=0
+#   the "-2" for width accounts for corners.    
     while [ $count -lt $((WIDTH - 2)) ]; do
-        printf "\033[%d;%dH0" "$ROW" "$((COL + 1 + count))" # ─
+#       the "+1" in the column calc skips the first corner.
+        printf "\033[%d;%dH─" "$ROW" "$((COL + 1 + count))"
         ((count++))
     done
-    printf "\033[%d;%dHX" "$ROW" "$((COL + WIDTH))" # ┐
+#   top right corner    
+    printf "\033[%d;%dH┐" "$ROW" "$((COL + WIDTH - 1))"
 
+#   main body draw loop
     local count=0
+#   again, "-2" here accounts for corners, the top and bottom ones this time.    
     while [ $count -lt $((HEIGHT - 2)) ]; do
-        printf "\033[%d;%dH0" "$((ROW + 1 + count))" "$COL" # │
+#       prints left edge of respective row    
+        printf "\033[%d;%dH│" "$((ROW + 1 + count))" "$COL"
 
-        local countb=0
-        while [ $countb -lt $((WIDTH - 2)) ]; do
-            printf "\033[%d;%dH " "$((ROW + 1 + count))" "$((COL + 2 + countb))"
-            ((countb++))
-        done
-        printf "\033[%d;%dH0" "$((ROW + 1 + count))" "$((COL + 1 + WIDTH))" # │
+#       inner loop for printing 
+        # local countb=0
+        # while [ $countb -lt $((WIDTH - 2)) ]; do
+        #     printf "\033[%d;%dH " "$((ROW + 1 + count))" "$((COL + 2 + countb))"
+        #     ((countb++))
+        # done
+        # UNNECESSARY
+
+#       prints right edge of respective row
+        printf "\033[%d;%dH│" "$((ROW + 1 + count))" "$((COL + WIDTH - 1))"
 
         ((count++))
     done
 
-    printf "\033[%d;%dHX" "$((ROW + HEIGHT))" "$COL" # └
+#   prints bottom left corner
+    printf "\033[%d;%dH└" "$((ROW + HEIGHT - 1))" "$COL"
+#   bottom edge draw loop    
     local count=0
     while [ $count -lt $((WIDTH - 2)) ]; do
-        printf "\033[%d;%dH0" "$((ROW + HEIGHT))" "$((COL + 1 + count))" # ─
+        printf "\033[%d;%dH─" "$((ROW + HEIGHT - 1))" "$((COL + 1 + count))"
         ((count++))
     done
-    printf "\033[%d;%dHX" "$((ROW + HEIGHT))" "$((COL + WIDTH))" # ┘
+#   prints bottom right corner
+    printf "\033[%d;%dH┘" "$((ROW + HEIGHT - 1))" "$((COL + WIDTH - 1))"
     return
 }
