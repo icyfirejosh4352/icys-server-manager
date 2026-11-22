@@ -18,7 +18,7 @@ trap 'cleanup' INT EXIT TERM
 printf '\e[?1049h'
 
 # clear screen
-printf '\e[2J\e[3J\e[H'
+printf '\e[2J\e[H'
 
 # hide cursor
 printf '\e[?25l'
@@ -29,12 +29,12 @@ stty -echo
 # printf '\x1b[48;5;16m'
 
 SLEEP_TIME=0.5
-read -r height width < <(stty size)
+read -r HEIGHT WIDTH < <(stty size)
 # main loop
 while : ; do 
 printf '\e[2J\e[3J\e[H'
 
-ui_draw_box 1 1 "$width" "$height"
+ui_draw_box 1 1 "$WIDTH" "$HEIGHT" 1
 
 
 sleep $SLEEP_TIME 
