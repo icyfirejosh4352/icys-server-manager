@@ -8,21 +8,24 @@ ui_draw_box()
     local HEIGHT=$4
     local TYPE=$5
 
+    local chunk=""
+
     case $TYPE in
         1)
     #   top left corner
-        printf "\033[%d;%dH┌" "$ROW" "$COL"
-
+        printf -v chunk "\033[%d;%dH┌" "$ROW" "$COL"
     #   top edge draw loop
         local count=0
+        local string=""
     #   the "-2" for width accounts for corners.    
         while [ $count -lt $((WIDTH - 2)) ]; do
     #       the "+1" in the column calc skips the first corner.
-            printf "\033[%d;%dH─" "$ROW" "$((COL + 1 + count))"
+            printf -v string "\033[%d;%dH─" "$ROW" "$((COL + 1 + count))"
             ((count++))
         done
+        chunk+=$string
     #   top right corner    
-        printf "\033[%d;%dH┐" "$ROW" "$((COL + WIDTH - 1))"
+#        printf -v chunk "\033[%d;%dH┐" "$ROW" "$((COL + WIDTH - 1))"
 
     #   main body draw loop
         local count=0
@@ -30,14 +33,6 @@ ui_draw_box()
         while [ $count -lt $((HEIGHT - 2)) ]; do
     #       prints left edge of respective row    
             printf "\033[%d;%dH│" "$((ROW + 1 + count))" "$COL"
-
-    #       inner loop for printing 
-            # local countb=0
-            # while [ $countb -lt $((WIDTH - 2)) ]; do
-            #     printf "\033[%d;%dH " "$((ROW + 1 + count))" "$((COL + 2 + countb))"
-            #     ((countb++))
-            # done
-            # UNNECESSARY
 
     #       prints right edge of respective row
             printf "\033[%d;%dH│" "$((ROW + 1 + count))" "$((COL + WIDTH - 1))"
@@ -54,8 +49,9 @@ ui_draw_box()
             ((count++))
         done
     #   prints bottom right corner
-        printf "\033[%d;%dH┘" "$((ROW + HEIGHT - 1))" "$((COL + WIDTH - 1))" ;;
+        printf "\033[%d;%dH┘" "$((ROW + HEIGHT - 1))" "$((COL + WIDTH - 1))"
 
+        FRAME+=chunk ;;
         2)
         printf "\033[%d;%dH╔" "$ROW" "$COL"
         local count=0
@@ -84,3 +80,11 @@ ui_draw_box()
     esac
     return
 }
+
+# ui_open_transition()
+# {
+#     local WIDTH=$1
+#     local HEIGHT=$2
+
+
+# }
