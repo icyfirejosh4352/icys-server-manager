@@ -1,7 +1,6 @@
 #!/usr/bin/bash
 
-ui_draw_box()
-{
+ui_draw_box() {
     local ROW=$1
     local COL=$2
     local WIDTH=$3
@@ -13,45 +12,53 @@ ui_draw_box()
     case $TYPE in
         1)
     #   top left corner
-        printf -v chunk "\033[%d;%dH┌" "$ROW" "$COL"
+        printf -v string "\033[%d;%dH┌" "$ROW" "$COL"
+        chunk+=$string
     #   top edge draw loop
+    #        printf -v string "\033[%d;%dH─" "$ROW" "$((COL + 1))"
         local count=0
         local string=""
     #   the "-2" for width accounts for corners.    
         while [ $count -lt $((WIDTH - 2)) ]; do
     #       the "+1" in the column calc skips the first corner.
-            printf -v string "\033[%d;%dH─" "$ROW" "$((COL + 1 + count))"
+    #       printf -v string "\033[%d;%dH─" "$ROW" "$((COL + 1 + count))"
+            string+="─"
             ((count++))
         done
         chunk+=$string
     #   top right corner    
-#        printf -v chunk "\033[%d;%dH┐" "$ROW" "$((COL + WIDTH - 1))"
+        chunk+="┐"
+        # printf -v chunk "\033[%d;%dH┐" "$ROW" "$((COL + WIDTH - 1))"
 
     #   main body draw loop
         local count=0
     #   again, "-2" here accounts for corners, the top and bottom ones this time.    
         while [ $count -lt $((HEIGHT - 2)) ]; do
     #       prints left edge of respective row    
-            printf "\033[%d;%dH│" "$((ROW + 1 + count))" "$COL"
-
+            printf -v string "\033[%d;%dH│" "$((ROW + 1 + count))" "$COL"
+            chunk+=$string
     #       prints right edge of respective row
-            printf "\033[%d;%dH│" "$((ROW + 1 + count))" "$((COL + WIDTH - 1))"
-
+            printf -v string "\033[%d;%dH│" "$((ROW + 1 + count))" "$((COL + WIDTH - 1))"
+            chunk+=$string
             ((count++))
         done
 
     #   prints bottom left corner
-        printf "\033[%d;%dH└" "$((ROW + HEIGHT - 1))" "$COL"
+        printf -v string "\033[%d;%dH└" "$((ROW + HEIGHT - 1))" "$COL"
+        chunk+=$string
+        #printf -v string "\033[%d;%dH─" "$((ROW + HEIGHT - 1))" "$((COL + 1))"
+        #chunk+=$string
     #   bottom edge draw loop    
         local count=0
         while [ $count -lt $((WIDTH - 2)) ]; do
-            printf "\033[%d;%dH─" "$((ROW + HEIGHT - 1))" "$((COL + 1 + count))"
+            # printf "\033[%d;%dH─" "$((ROW + HEIGHT - 1))" "$((COL + 1 + count))"
+            chunk+="─"
             ((count++))
         done
     #   prints bottom right corner
-        printf "\033[%d;%dH┘" "$((ROW + HEIGHT - 1))" "$((COL + WIDTH - 1))"
-
-        FRAME+=chunk ;;
+        # printf -v string "\033[%d;%dH┘" "$((ROW + HEIGHT - 1))" "$((COL + WIDTH - 1))"
+        chunk+="┘"
+        ;;
         2)
         printf "\033[%d;%dH╔" "$ROW" "$COL"
         local count=0
@@ -78,6 +85,7 @@ ui_draw_box()
 
         printf "\033[%d;%dH╝" "$((ROW + HEIGHT - 1))" "$((COL + WIDTH - 1))" ;;
     esac
+    FRAME+=$chunk
     return
 }
 
@@ -88,3 +96,16 @@ ui_draw_box()
 
 
 # }
+
+ui_draw_text_at ()
+{
+    local STR=$1
+    local ROW=$2
+    local COL=$3
+    local COLOUR=$4
+
+    local string=""
+    printf -v string "\033[%d;%dH%s%s%s" "$ROW" "$COL" "$COLOUR" "$STR" "$TXT_RST"
+    FRAME+=$string
+    return
+}

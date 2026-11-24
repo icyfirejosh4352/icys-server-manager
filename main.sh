@@ -32,16 +32,23 @@ stty -echo
 # printf '\x1b[48;5;16m'
 
 SLEEP_TIME=0.5
-read -r HEIGHT WIDTH < <(stty size)
+# read -r HEIGHT WIDTH < <(stty size)
 # main loop
 while : ; do 
+    read -r HEIGHT WIDTH < <(stty size)
 #   main frame that is flushed to display at the end of every cycle.
     FRAME=""
 
     printf '\e[2J\e[3J\e[H'
 
     ui_draw_box 1 1 "$WIDTH" "$HEIGHT" 1
-
+    ui_draw_box 2 2 "$((WIDTH/2))" "$((HEIGHT/2))" 1
+    ui_draw_text_at "█GREEN█" 3 3 $C_GREEN
+    ui_draw_text_at "█YELLOW█" 3 10 $C_YELLOW
+    ui_draw_text_at "█ORANGE█" 3 18 $C_ORANGE
+    ui_draw_text_at "█RED█" 3 26 $C_RED
+#    ui_draw_box 8 8 10 10 1
+    printf "%s" "$FRAME"
 
     sleep $SLEEP_TIME 
 
