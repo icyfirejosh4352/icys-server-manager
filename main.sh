@@ -41,12 +41,13 @@ while : ; do
 
     printf '\e[2J\e[3J\e[H'
 
-    ui_draw_box 1 1 "$WIDTH" "$HEIGHT" 1
-    ui_draw_box 2 2 "$((WIDTH/2))" "$((HEIGHT/2))" 1
+    ui_draw_box 1 1 "$WIDTH" "$HEIGHT" 1 $C_RED
+    ui_draw_box 2 2 "$((WIDTH/2))" "$((HEIGHT/2))" 2 $C_TEAL
     ui_draw_text_at "█GREEN█" 3 3 $C_GREEN
     ui_draw_text_at "█YELLOW█" 3 10 $C_YELLOW
     ui_draw_text_at "█ORANGE█" 3 18 $C_ORANGE
     ui_draw_text_at "█RED█" 3 26 $C_RED
+    ui_draw_text_at "█TEAL█" 3 31 $C_TEAL
 #    ui_draw_box 8 8 10 10 1
     printf "%s" "$FRAME"
 
@@ -54,7 +55,7 @@ while : ; do
 
 done
 
-
+#  ▂▃▄▅▆▇█
 
 # restore previous screen
 printf '\e[?1049l'
