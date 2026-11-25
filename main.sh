@@ -21,6 +21,8 @@ trap 'cleanup' INT EXIT TERM
 prev_total=0
 prev_idle=0
 
+# prev_
+
 while IFS=':' read -r key value; do
     if [[ "$key" == "model name"* ]]; then
         model_name=${value# }
@@ -65,7 +67,7 @@ while : ; do
 
     ui_draw_text_at "[ISM v0.0001]" 1 "$(((WIDTH/2) - 6))"
 
-    itop_main 3 3 "$((WIDTH/2))" "$((HEIGHT/4))"
+    itop_main 3 3 "$((WIDTH/2))" "$((HEIGHT/2))"
 
     # final frame pushed to display
     printf "%s" "$FRAME"

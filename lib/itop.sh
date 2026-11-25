@@ -4,7 +4,7 @@
 source "$SCRIPT_DIR"/lib/ui.sh
 
 CPU_HIST=( )
-
+RAM_HIST=( )
 i=0
 # while [ $i -lt 300 ]; do
 #     CPU_HIST+=0
@@ -18,6 +18,14 @@ itop_init ()
         CPU_HIST+=(0)
         ((count++)) 
     done
+    local count=0
+    while [ $count -lt 300 ] ; do
+        RAM_HIST+=(0)
+        ((count++)) 
+    done
+
+    read -r key val < /proc/meminfo
+    total_mem=$val  
 }
 
 itop_main()
@@ -36,7 +44,7 @@ itop_main()
     #     fi
     # done
     read -r label user nice system idle iowait irq softirq steal _ < /proc/stat
-    
+    read -r freq_khz < /sys/devices/system/cpu/cpu0/cpufreq/
     total_idle=$((idle+iowait))
     total_time=$((user+nice+system+total_idle+irq+softirq+steal))
 
@@ -57,12 +65,32 @@ itop_main()
     #     CPU_HIST=("${CPU_HIST[@]:1}")
     # fi
 
-    ui_draw_box "$ROW" "$COL" "$WIDTH" "$HEIGHT" 2 "$C_TEAL"
+    freq_ghz_int=$(((freq_khz/10000)/100))
+    freq_ghz_dec=$(((freq_khz/10000)%100))
+
+
+    while read -r key val _ ; do 
+        if [ key == "MemFree:" ] ; then
+            mem_free=$val
+            break
+        fi
+    done < /proc/meminfo
+
+
+
+
+
+    ui_draw_box "$ROW" "$COL" "$WIDTH" "$((HEIGHT/2))" 2 "$C_TEAL"
     ui_draw_text_at "CPU: ${model_name}" "$ROW" "$((COL+1))" ""
     ui_draw_text_at "${cpu_prctg}" "$((ROW+1))" "$((COL + WIDTH - 5))" "$C_RED"
-    ui_draw_sparkline "$((ROW+1))" "$((COL+1))" "$((WIDTH-7))" ""
+    ui_draw_CPU_sparkline "$((ROW+1))" "$((COL+1))" "$((WIDTH-7))" ""
     ui_draw_text_at "%" "$((ROW+1))" "$((COL+WIDTH-2))" "$C_RED"
+    ui_draw_text_at "$freq_khz" "$ROW" "$((COL+WIDTH-4))" "$C_RED"
+    ui_draw_text_at "CPU info:" "$((ROW+2))" "$((COL+1))" "$C_BLUE"
+#    ui_draw_text_at "$val" "$((ROW+2))" "$((COL+WIDTH-2))" "$C_RED"
     # printf -v string "\033[%d;%dH%d" "$ROW" "$COL" "$cpu_prctg"
     # FRAME+=$string
+
+    
 
 }
