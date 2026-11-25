@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 
 # File with all commonly used ANSI escape sequences.
 # Inspired by aristocratos/bashtop.

@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 
 #shellcheck source=/dev/null
 source "$SCRIPT_DIR"/lib/ui.sh
